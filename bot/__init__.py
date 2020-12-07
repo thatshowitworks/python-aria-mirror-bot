@@ -8,6 +8,22 @@ import telegram.ext as tg
 from dotenv import load_dotenv
 import socket
 import faulthandler
+from config import (BOT_TOKEN,
+                    GDRIVE_FOLDER_ID,
+                    OWNER_ID,
+                    DOWNLOAD_DIR,
+                    DOWNLOAD_STATUS_UPDATE_INTERVAL,
+                    AUTO_DELETE_MESSAGE_DURATION,
+                    IS_TEAM_DRIVE,
+                    INDEX_URL,
+                    USER_SESSION_STRING,
+                    TELEGRAM_API,
+                    TELEGRAM_HASH,
+                    USE_SERVICE_ACCOUNTS,
+                    MEGA_API_KEY,
+                    MEGA_EMAIL_ID,
+                    MEGA_PASSWORD)
+
 faulthandler.enable()
 
 socket.setdefaulttimeout(600)
@@ -21,7 +37,6 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
                     handlers=[logging.FileHandler('log.txt'), logging.StreamHandler()],
                     level=logging.INFO)
 
-load_dotenv('config.env')
 
 Interval = []
 
@@ -31,13 +46,6 @@ def getConfig(name: str):
 
 
 LOGGER = logging.getLogger(__name__)
-
-try:
-    if bool(getConfig('_____REMOVE_THIS_LINE_____')):
-        logging.error('The README.md file there to be read! Exiting now!')
-        exit()
-except KeyError:
-    pass
 
 aria2 = aria2p.API(
     aria2p.Client(
@@ -67,29 +75,29 @@ if os.path.exists('authorized_chats.txt'):
             #    LOGGER.info(line.split())
             AUTHORIZED_CHATS.add(int(line.split()[0]))
 try:
-    BOT_TOKEN = getConfig('BOT_TOKEN')
-    parent_id = getConfig('GDRIVE_FOLDER_ID')
-    DOWNLOAD_DIR = getConfig('DOWNLOAD_DIR')
+    BOT_TOKEN = BOT_TOKEN
+    parent_id = GDRIVE_FOLDER_ID
+    DOWNLOAD_DIR = DOWNLOAD_DIR
     if DOWNLOAD_DIR[-1] != '/' or DOWNLOAD_DIR[-1] != '\\':
         DOWNLOAD_DIR = DOWNLOAD_DIR + '/'
-    DOWNLOAD_STATUS_UPDATE_INTERVAL = int(getConfig('DOWNLOAD_STATUS_UPDATE_INTERVAL'))
-    OWNER_ID = int(getConfig('OWNER_ID'))
-    AUTO_DELETE_MESSAGE_DURATION = int(getConfig('AUTO_DELETE_MESSAGE_DURATION'))
-    USER_SESSION_STRING = getConfig('USER_SESSION_STRING')
-    TELEGRAM_API = getConfig('TELEGRAM_API')
-    TELEGRAM_HASH = getConfig('TELEGRAM_HASH')
+    DOWNLOAD_STATUS_UPDATE_INTERVAL = int(DOWNLOAD_STATUS_UPDATE_INTERVAL)
+    OWNER_ID = int(OWNER_ID)
+    AUTO_DELETE_MESSAGE_DURATION = int(AUTO_DELETE_MESSAGE_DURATION)
+    USER_SESSION_STRING = USER_SESSION_STRING
+    TELEGRAM_API = int(TELEGRAM_API)
+    TELEGRAM_HASH = TELEGRAM_HASH
 except KeyError as e:
     LOGGER.error("One or more env variables missing! Exiting now")
     exit(1)
 
 try:
-    MEGA_API_KEY = getConfig('MEGA_API_KEY')
+    MEGA_API_KEY = MEGA_API_KEY
 except KeyError:
     logging.warning('MEGA API KEY not provided!')
     MEGA_API_KEY = None
 try:
-    MEGA_EMAIL_ID = getConfig('MEGA_EMAIL_ID')
-    MEGA_PASSWORD = getConfig('MEGA_PASSWORD')
+    MEGA_EMAIL_ID = MEGA_EMAIL_ID
+    MEGA_PASSWORD = MEGA_PASSWORD
     if len(MEGA_EMAIL_ID) == 0 or len(MEGA_PASSWORD) == 0:
         raise KeyError
 except KeyError:
@@ -97,13 +105,13 @@ except KeyError:
     MEGA_EMAIL_ID = None
     MEGA_PASSWORD = None
 try:
-    INDEX_URL = getConfig('INDEX_URL')
+    INDEX_URL = INDEX_URL
     if len(INDEX_URL) == 0:
         INDEX_URL = None
 except KeyError:
     INDEX_URL = None
 try:
-    IS_TEAM_DRIVE = getConfig('IS_TEAM_DRIVE')
+    IS_TEAM_DRIVE = IS_TEAM_DRIVE
     if IS_TEAM_DRIVE.lower() == 'true':
         IS_TEAM_DRIVE = True
     else:
@@ -112,7 +120,7 @@ except KeyError:
     IS_TEAM_DRIVE = False
 
 try:
-    USE_SERVICE_ACCOUNTS = getConfig('USE_SERVICE_ACCOUNTS')
+    USE_SERVICE_ACCOUNTS = USE_SERVICE_ACCOUNTS
     if USE_SERVICE_ACCOUNTS.lower() == 'true':
         USE_SERVICE_ACCOUNTS = True
     else:
